@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>home</title>
+        <link rel="stylesheet" type="text/css" href="static/style.css">
+    </head>
+    <body>
+        <form action="/result" method="post">
+            {% csrf_token %}
+            <label for="stock_label">A stock symbol:</label><br>
+            <input type="text" id="stock_label" name="stock_label" required><br>
+            <label for="allotment">Allotment (number of shares):</label><br>
+            <input type="text" id="allotment" name="allotment" required><br>
+            <label for="final_share_price">Final share price ($):</label><br>
+            <input type="text" id="final_share_price" name="final_share_price" required><br>
+            <label for="sell_commission">Sell commission ($):</label><br>
+            <input type="text" id="sell_commission" name="sell_commission" required><br>
+            <label for="initial_share_price">Initial share price ($):</label><br>
+            <input type="text" id="initial_share_price" name="initial_share_price" required><br>
+            <label for="buy_commission">Buy commission ($):</label><br>
+            <input type="text" id="buy_commission" name="buy_commission" required><br>
+            <label for="capital_gain_tax_rate">Captial gain tax rate (%):</label><br>
+            <input type="text" id="capital_gain_tax_rate" name="capital_gain_tax_rate" required><br><br>
+            <input type="submit" value="Submit"><br>
+        </form>
+    </body>
+</html>
