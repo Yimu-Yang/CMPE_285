@@ -18,7 +18,7 @@ def calculate(request):
         tax_on_capital_gain = float(capital_gain_tax_rate) * 0.01 * capital_gain
         cost = round(int(allotment) * float(initial_share_price) + float(sell_commission) + float(buy_commission) + tax_on_capital_gain, 2)
         net_profit = round(proceeds - cost, 2)
-        return_on_investment = round(round(net_profit / cost * 100.00, 2), 2)
+        return_on_investment = round(net_profit / cost * 100.00, 2)
         break_even_price = round((int(allotment) * float(initial_share_price) + float(sell_commission) + float(buy_commission)) / int(allotment), 2)
         input = {'proceeds': proceeds, 'cost': cost, 'net_profit': net_profit, 'return_on_investment': return_on_investment, 'break_even_price': break_even_price}
         return render(request, 'result.html', input)
