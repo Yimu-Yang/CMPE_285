@@ -20,5 +20,5 @@ def calculate(request):
         net_profit = round(proceeds - cost, 2)
         return_on_investment = round(net_profit / cost * 100.00, 2)
         break_even_price = round((int(allotment) * float(initial_share_price) + float(sell_commission) + float(buy_commission)) / int(allotment), 2)
-        input = {'proceeds': proceeds, 'cost': cost, 'net_profit': net_profit, 'return_on_investment': return_on_investment, 'break_even_price': break_even_price}
+        input = {'stock_label': stock_label, 'proceeds': proceeds, 'cost': cost, 'net_profit': net_profit, 'return_on_investment': return_on_investment, 'break_even_price': break_even_price}
         return render(request, 'result.html', input)
