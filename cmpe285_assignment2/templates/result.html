@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>result</title>
+        <link rel="stylesheet" type="text/css" href="static/style.css">
+    </head>
+    <body>
+        <table>
+            <thead>
+                <tr>
+                    <th>Attribute</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Stock Label</td>
+                    <td>{{ stock_label }}</td>
+                </tr>
+                <tr>
+                    <td>Current date and time</td>
+                    <td>{{ time }}</td>
+                </tr>
+                <tr>
+                    <td>Full name of the company</td>
+                    <td>{{ company_name }}</td>
+                </tr>
+                <tr>
+                    <td>Stock price</td>
+                    <td>{{ stock_price }}</td>
+                </tr>
+                <tr>
+                    <td>Value changes</td>
+                    <td>{{ value_changes }}</td>
+                </tr>
+                <tr>
+                    <td>Percentage changes</td>
+                    <td>{{ percentage_changes }}</td>
+                </tr>
+            </tbody>
+        </table><br><br>
+
+        <form action="/result" method="post">
+            {% csrf_token %}
+            <label for="stock_label">stock symbol:</label><br>
+            <input type="text" id="stock_label" name="stock_label" required><br><br>
+            <input type="submit" value="Submit"><br>
+        </form><br>
+    </body>
+</html>
