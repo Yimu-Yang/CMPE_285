@@ -7,11 +7,14 @@ def index(request):
 def calculate(request):
     if request.method == 'POST':
         stock_label = request.POST['stock_label']
-        time = 'current time'
-        company_name = 'company name'
-        stock_price = '+1'
-        value_changes = '+1'
-        percentage_changes = '+1%'
+        time = '[current time]'
+        company_name = '[company name]'
+        stock_price = '[100]'
+        value_changes = '[+10]'
+        percentage_changes = '[+6%]'
+
+        if stock_label == 'error':
+            return render(request, 'error.html', {'error_message': 'wrong stock label!'})
 
         input = {'stock_label': stock_label, 'time': time, 'company_name': company_name, 'stock_price': stock_price, 'value_changes': value_changes, 'percentage_changes': percentage_changes}
         return render(request, 'result.html', input)
