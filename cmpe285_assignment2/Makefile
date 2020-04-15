@@ -1,6 +1,8 @@
 install:
 	pip3 install django
 	pip3 install yfinance
+	pip3 install lxml
+	pip3 install html5lib
 	pip3 install pytz
 
 migrate:
