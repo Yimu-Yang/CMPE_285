@@ -8,7 +8,7 @@
     <body>
         <form action="/result" method="post">
             {% csrf_token %}
-            <label for="stock_label">stock symbol:</label><br>
+            <label for="stock_label">Please enter a symbol:</label><br>
             <input type="text" id="stock_label" name="stock_label" required><br><br>
             <input type="submit" value="Submit"><br>
         </form>

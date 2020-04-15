@@ -1,5 +1,7 @@
 install:
 	pip3 install django
+	pip3 install yfinance
+	pip3 install pytz
 
 migrate:
 	python3 manage.py migrate
