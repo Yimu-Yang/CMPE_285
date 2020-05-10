@@ -19,5 +19,6 @@ from stock import views
 
 urlpatterns = [
     path('', views.index),
-    path('result', views.calculate),
+    path('suggest', views.suggest),
+    path('dashboard', views.dashboard),
 ]

@@ -3,14 +3,71 @@
     <head>
         <meta charset="UTF-8">
         <title>home</title>
-        <link rel="stylesheet" type="text/css" href="static/style.css">
+        <link rel="stylesheet" href="static/css/style.css"/>
+        <link rel="stylesheet" href="static/css/jquery-ui.css"/>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&display=swap">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif&display=swap">
+        <script type="text/javascript" src="static/js/jquery.js"></script>
+        <script type="text/javascript" src="static/js/jquery-ui.js"></script>
+        <script type="text/javascript" src="static/js/onload.js"></script>
     </head>
-    <body>
-        <form action="/result" method="post">
-            {% csrf_token %}
-            <label for="stock_label">Please enter a symbol:</label><br>
-            <input type="text" id="stock_label" name="stock_label" required><br><br>
-            <input type="submit" value="Submit"><br>
-        </form>
+
+    <body background="static/img/background.jpeg">
+        <!-- title division -->
+        <div id="titleDiv">
+            <h1>
+                Stock Portfolio Suggestion Engine
+            </h1>
+        </div>
+
+        <!-- navigator division -->
+        <div id="navigatorDiv">
+            <ul>
+                <li><a href="/" style="background-color:#3f6469">Home</a></li>
+                <li><a href="/dashboard">DashBoard</a></li>
+            </ul>
+        </div>
+
+        <!-- content division -->
+        <div id="contentDiv">
+            <table class="searchPage">
+                <tr>
+                    <td>
+                        <img id="rollingImage" src="static/img/1.jpg"/>
+                    </td>
+                    <td>
+                        <form action="/suggest" method="post" onsubmit="return inputValidate()" id="searchForm" style="position: relative; left: 20%; text-align: center">
+                            {% csrf_token %}
+                            <div id="dialogTab">
+                                <div id="dialog" title="Instruction">
+                                    <p>
+                                        Input dollar amount to invest in USD (Minimum is $5000 USD) <br><br>
+                                        Pick one or two investment strategies: <br>
+                                            * Ethical Investing <br>
+                                            * Growth Investing <br>
+                                            * Index Investing <br>
+                                            * Quality Investing <br>
+                                            * Value Investing <br>
+                                    </p>
+                                    <input type="button" onclick="closeDialog()" value="Ok" class="ui-state-default ui-corner-all"/>
+                                </div>
+                                <input type="button" onclick="openDialog()" class="ui-icon ui-icon-help ui-corner-all"/>
+                            </div>
+                            <span class = "ui-icon ui-icon-star"></span>
+                            <label for="dollar_amount">Please entry the dollar amount</label>
+                            <input type="text" name="dollar_amount" id="dollar_amount"/><br>
+                            <span class = "ui-icon ui-icon-star"></span>
+                            <label for="investment_strategy_1">Please entry the investment strategy 1</label>
+                            <input type="text" name="investment_strategy_1" id="investment_strategy_1"/><br>
+                            <span class = "ui-icon ui-icon-star"></span>
+                            <label for="investment_strategy_2">Please entry the investment strategy 2</label>
+                            <input type="text" name="investment_strategy_2" id="investment_strategy_2"/><br>
+                            <input type="submit" value="submit"/>
+                        </form>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
     </body>
 </html>

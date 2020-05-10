@@ -10,6 +10,21 @@ def index(request):
         return render(request, 'index.html')
 
 
+def suggest(request):
+    if request.method == 'POST':
+        dollar_amount = request.POST['dollar_amount']
+        investment_strategy_1 = request.POST['investment_strategy_1']
+        investment_strategy_2 = request.POST['investment_strategy_2']
+        parameters = {'dollar_amount': dollar_amount, 'investment_strategy_1': investment_strategy_1,
+                      'investment_strategy_2': investment_strategy_2}
+        return render(request, 'result.html', parameters)
+
+
+def dashboard(request):
+    if request.method == 'GET':
+        return render(request, 'dashboard.html')
+
+
 def calculate(request):
     if request.method == 'POST':
         try:
