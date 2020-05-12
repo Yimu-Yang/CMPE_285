@@ -43,13 +43,11 @@ function initAll() {
     $("#dialog").dialog();
     $("#dialog").dialog("close");
 
-    //google chart for dashboard
+    //google chart for results
     drawChart1();
     drawChart2();
     drawChart3();
     drawChart4();
-    drawChart5();
-    drawChart6();
 }
 
 // function dropDownMenu() {
@@ -97,24 +95,51 @@ function changeImg() {
 }
 
 function inputValidate() {
-    // if (!document.getElementById('schoolName')) {
-    //     return;
-    // }
-    // var schoolName = document.getElementById("schoolName").value;
-    // var error = "";
-    // if (schoolName == "") {
-    //     error = "Missing University Name\n";
-    //     alert(error);
-    //     return false;
-    // }
-    // // has to be letter or space
-    // var schoolNameRE = /^[a-zA-Z\s_&]+$/;
-    // if (!schoolName.match(schoolNameRE)) {
-    //     error = "Invalid University Name\n";
-    //     alert(error);
-    //     return false;
-    // }
-    // return true;
+    if (!document.getElementById('dollar_amount')) {
+        return;
+    }
+    var dollar_amount = document.getElementById("dollar_amount").value;
+    var error = "";
+    if (dollar_amount === "") {
+        error = "Missing University Name\n";
+        alert(error);
+        return false;
+    }
+    if ((!dollar_amount.match(/^-{0,1}\d+$/) && !dollar_amount.match(/^\d+\.\d+$/)) || parseFloat(dollar_amount) < 5000) {
+        error = "Invalid Dollar Amount!\n";
+        alert(error);
+        return false;
+    }
+
+    if (!document.getElementById('investment_strategy_1')) {
+        return;
+    }
+    var investment_strategy_1 = document.getElementById("investment_strategy_1").value;
+    if (investment_strategy_1.toLowerCase() !== "ethical investing"
+        && investment_strategy_1.toLowerCase() !== "growth investing"
+        && investment_strategy_1.toLowerCase() !== "index investing"
+        && investment_strategy_1.toLowerCase() !== "quality investing"
+        && investment_strategy_1.toLowerCase() !== "value investing") {
+        error = "Invalid Strategy 1!\n";
+        alert(error);
+        return false;
+    }
+
+    if (!document.getElementById('investment_strategy_2')) {
+        return;
+    }
+    var investment_strategy_2 = document.getElementById("investment_strategy_2").value;
+    if (investment_strategy_2.toLowerCase() !== ""
+        && investment_strategy_2.toLowerCase() !== "ethical investing"
+        && investment_strategy_2.toLowerCase() !== "growth investing"
+        && investment_strategy_2.toLowerCase() !== "index investing"
+        && investment_strategy_2.toLowerCase() !== "quality investing"
+        && investment_strategy_2.toLowerCase() !== "value investing") {
+        error = "Invalid Strategy 2!\n";
+        alert(error);
+        return false;
+    }
+    return true;
 }
 
 function openDialog() {
@@ -137,46 +162,27 @@ function drawChart1() {
     if (!document.getElementById('chart1')) {
         return;
     }
-    var origin = window.location.origin;
-    var url = origin + "/aveExpense";
-    // var url = "http://localhost:3000/aveExpense";
-    var doc = [];
-    $.get(url, function (data, status) {
-        if (status != 'success') {
-            console.log("get summarized data failed :" + status);
-        } else {
-            console.log("get summarized data :" + status);
-            doc = data;
-            google.charts.load('current', {'packages': ['bar']});
-            // $.get() is async, must setOnLoadCallback here, or the doc[] can be empty.
-            google.charts.setOnLoadCallback(function () {
-                var data = google.visualization.arrayToDataTable([
-                    ['Location', 'Public', 'Private'],
-                    ['urban', doc.public_urban_ave, doc.private_urban_ave],
-                    ['suburban', doc.public_suburban_ave, doc.private_suburban_ave],
-                    ['small town', doc.public_smallTown_ave, doc.private_smallTown_ave],
-                    ['small city', doc.public_smallCity_ave, doc.private_smallCity_ave]
-                ]);
-                var options = {
-                    chart: {
-                        title: 'Average Expense of the College and University ($/half year)',
-                        subtitle: 'Expense is primarily affected by ownership, not locations.',
-                    },
-                    bars: 'vertical',
-                    vAxis: {format: 'decimal'},
-                    height: 300,
-                    width: 500,
-                    // colors: ['#d95f02', '#7570b3'],
-                    colors: ['#88B972', '#2B4520'],
-                    backgroundColor: {
-                        fill: '#EEEEEE',
-                        fillOpacity: 0.7
-                    }
-                };
-                var chart = new google.charts.Bar(document.getElementById('chart1'));
-                chart.draw(data, google.charts.Bar.convertOptions(options));
-            });
-        }
+    google.charts.load('current', {'packages': ['table']});
+    google.charts.setOnLoadCallback(function () {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Attribute');
+        data.addColumn('string', 'Value');
+
+        data.addRow(['investing strategy', document.getElementById('strategy 1').innerText]);
+        data.addRow(['invested amount ($)', document.getElementById('investment amount 1').innerText]);
+        data.addRow(['invested stocks', document.getElementById('invested stocks 1').innerText]);
+        data.addRow(['money split ($)', document.getElementById('money distribution 1').innerText]);
+        data.addRow(['current stock prices ($)', document.getElementById('current stock share prices 1').innerText]);
+        data.addRow(['number of shares bought', document.getElementById('number of shares 1').innerText]);
+        data.addRow(['current overall portfolio value ($)', document.getElementById('portfolio value 1').innerText]);
+
+        var options = {
+            height: '100%',
+            width: '100%',
+            showRowNumber: true
+        };
+        var table = new google.visualization.Table(document.getElementById('chart1'));
+        table.draw(data, options);
     });
 }
 
@@ -184,66 +190,133 @@ function drawChart2() {
     if (!document.getElementById('chart2')) {
         return;
     }
-    var origin = window.location.origin;
-    // Define the chart to be drawn.
-    var doc = [];
-    var schoolNames = ['Stanford', 'Harvard', 'Yale', 'Princeton', 'Columbia', 'UC_berkeley', 'UC_LA', 'GeorgiaTech', 'University_of_NorthCarolina', 'University_of_Michigan'];
-    for (var i = 0; i < schoolNames.length; i++) {
-        $.ajax({
-            async: false,
-            type: 'GET',
-            // url: "http://localhost:3000/universityInfo?schoolName=" + schoolNames[i],
-            url: origin + "/universityInfo?schoolName=" + schoolNames[i],
-            success: function (data, status) {
-                if (status != 'success') {
-                    console.log("get university data failed :" + status);
-                } else {
-                    console.log("get university data :" + status);
-                    doc[i] = {name: schoolNames[i], acceptance: data.percent_admittance, control: data.control};
-                }
-            }
-        });
+
+    var stocks = document.getElementById('stock label 1').innerText
+    start = 0
+    end = 0
+    flag = true
+    stock_array = []
+    for (i = 0; i < stocks.length; i++) {
+        if (stocks.charAt(i) === "'" && flag === true) {
+            start = i
+            flag = false
+            continue
+        }
+        if (stocks.charAt(i) === "'" && flag === false) {
+            end = i
+            flag = true
+            stock_array.push(stocks.substring(start + 1, end))
+            continue
+        }
     }
-    // var input = [['university', 'Acceptance Rate %', {role: 'style'}, {role: 'annotation'},'Average', {role: 'style'}]];
-    var input = [['university', 'Acceptance Rate %', {role: 'style'}, {role: 'annotation'}]];
-    for (var i = 0; i < doc.length; i++) {
-        var color = '#88B972';
-        if (doc[i].control == 'private') {
-            color = '#2B4520';
+
+    var amounts = document.getElementById('current stock share prices 1').innerText
+    start = 0
+    amount_array = []
+    for (i = 0; i < amounts.length; i++) {
+        if (amounts.charAt(i) === ",") {
+            amount_array.push(amounts.substring(start + 1, i))
+            start = i + 1
         }
-        // remove 'university_of_'
-        var index = doc[i].name.indexOf('_of_');
-        var name = doc[i].name;
-        if (index >= 0) {
-            name = doc[i].name.substring(index + 4);
+    }
+    amount_array.push(amounts.substring(start + 1, amounts.length - 1))
+
+    var money_distribution = document.getElementById('money distribution 1').innerText
+    start = 0
+    money_distribution_array = []
+    for (i = 0; i < money_distribution.length; i++) {
+        if (money_distribution.charAt(i) === ",") {
+            money_distribution_array.push(money_distribution.substring(start + 1, i))
+            start = i + 1
         }
-        var rate = parseFloat(doc[i].acceptance);
-        input.push([name, rate, color, rate]);
-        // input.push([name, rate, color, rate,'70','red']);
+    }
+    money_distribution_array.push(money_distribution.substring(start + 1, money_distribution.length - 1))
+
+    var input = [['stock', 'current market price', 'invested money']];
+    for (var i = 0; i < stock_array.length; i++) {
+        input.push([stock_array[i], parseFloat(amount_array[i]), parseFloat(money_distribution_array[i])])
+    }
+
+    google.charts.load('current', {'packages': ['bar']});
+    google.charts.setOnLoadCallback(function () {
+        var data = google.visualization.arrayToDataTable(input);
+        var options = {
+            chart: {
+                title: 'Stock\'s current market price vs. invested money ($)',
+            },
+            bars: 'vertical',
+            vAxis: {format: 'decimal'},
+            height: 300,
+            width: 500,
+            colors: ['#88B972', '#2B4520'],
+            backgroundColor: {
+                fill: '#EEEEEE',
+                fillOpacity: 0.7
+            }
+        };
+        var chart = new google.charts.Bar(document.getElementById('chart2'));
+        chart.draw(data, google.charts.Bar.convertOptions(options));
+    });
+}
+
+function drawChart3() {
+    if (!document.getElementById('chart3')) {
+        return;
+    }
+
+    var stocks = document.getElementById('stock label 1').innerText
+    start = 0
+    end = 0
+    flag = true
+    stock_array = []
+    for (i = 0; i < stocks.length; i++) {
+        if (stocks.charAt(i) === "'" && flag === true) {
+            start = i
+            flag = false
+            continue
+        }
+        if (stocks.charAt(i) === "'" && flag === false) {
+            end = i
+            flag = true
+            stock_array.push(stocks.substring(start + 1, end))
+            continue
+        }
+    }
+
+    var share = document.getElementById('number of shares 1').innerText
+    start = 0
+    share_array = []
+    for (i = 0; i < share.length; i++) {
+        if (share.charAt(i) === ",") {
+            share_array.push(share.substring(start + 1, i))
+            start = i + 1
+        }
+    }
+    share_array.push(share.substring(start + 1, share.length - 1))
+
+    var input = [['Stock', 'Shares Bought', {role: 'style'}, {role: 'annotation'}]];
+    for (var i = 0; i < stock_array.length; i++) {
+        input.push([stock_array[i], parseInt(share_array[i]), '#88B972', parseInt(share_array[i])])
     }
 
     google.charts.load('current', {packages: ['corechart', 'bar']});
     google.charts.setOnLoadCallback(function () {
         var data = google.visualization.arrayToDataTable(input);
         var options = {
-            title: 'Universities with the Lowest Acceptance Rates (%)',
+            title: 'Number of Shares Bought',
             chartArea: {width: '70%', height: '75%', left: '27%', top: '17%'},
-            // colors: ['#88B972', '#2B4520'],
-            //  displayAnnotations: true,
             annotations: {
                 textStyle: {fontSize: 11},
             },
             hAxis: {
-                // title: 'Acceptance Rate',
                 minValue: 0,
-                // format: 'percent'
                 gridlines: {
                     count: 0
                 },
                 textPosition: 'none'
             },
             vAxis: {
-                title: 'Public vs. Private',
+                title: 'Stock',
                 textStyle: {
                     fontSize: 12
                 }
@@ -258,70 +331,7 @@ function drawChart2() {
             legend: {position: 'none'},
             seriesType: 'bars',
             series: {1: {type: 'scatter'}},
-            // fontSize: 14,
         };
-        var chart = new google.visualization.BarChart(document.getElementById('chart2'));
-        chart.draw(data, options);
-    });
-}
-
-function drawChart3() {
-    if (!document.getElementById('chart3')) {
-        return;
-    }
-    var origin = window.location.origin;
-    var doc = [];
-    var schoolNames = ['IllinoisTech', 'GeorgiaTech', 'MIT', 'harvard', 'Carnegie_Mellon', 'stanford', 'UC_berkeley', 'Yale', 'SANJOSEstate', 'BENNINGTON', 'LESLEY'];
-    for (var i = 0; i < schoolNames.length; i++) {
-        $.ajax({
-            async: false,
-            type: 'GET',
-            // url: "http://localhost:3000/universityInfo?schoolName=" + schoolNames[i],
-            url: origin + "/universityInfo?schoolName=" + schoolNames[i],
-            success: function (data, status) {
-                if (status != 'success') {
-                    console.log("get university data failed :" + status);
-                } else {
-                    console.log("get university data :" + status);
-                    doc[i] = {name: data.name, ratio: data.male_female_ratio};
-                }
-            }
-        });
-    }
-    var input = [['Name', 'Male', 'Female', {role: 'annotation'}]];
-    for (var i = 0; i < doc.length; i++) {
-        var m = parseInt(doc[i].ratio.substring(0, doc[i].ratio.indexOf(':')));
-        var f = parseInt(doc[i].ratio.substring(doc[i].ratio.indexOf(':') + 1));
-        var mp = m / (m + f) * 100;
-        var fp = f / (m + f) * 100;
-        input.push([doc[i].name, mp, fp, '']);
-    }
-    google.charts.load('current', {'packages': ['bar']});
-    google.charts.setOnLoadCallback(function () {
-        var data = google.visualization.arrayToDataTable(input);
-        var options = {
-            title: 'University Male/Female Ratio (%)',
-            annotations: {
-                textStyle: {fontSize: 11},
-            },
-            hAxis: {
-                gridlines: {
-                    count: 3
-                },
-            },
-            height: 300,
-            width: 500,
-            bar: {groupWidth: "60%"},
-            bars: 'horizontal',
-            colors: ['#2B4520', '#88B972'],
-            backgroundColor: {
-                fill: '#EEEEEE',
-                fillOpacity: 0.7
-            },
-            isStacked: true
-        };
-        // var chart = new google.charts.Bar(document.getElementById('chart3'));
-        // chart.draw(data, google.charts.Bar.convertOptions(options));
         var chart = new google.visualization.BarChart(document.getElementById('chart3'));
         chart.draw(data, options);
     });
@@ -331,49 +341,51 @@ function drawChart4() {
     if (!document.getElementById('chart4')) {
         return;
     }
-    var origin = window.location.origin;
-    var doc = [];
-    var schoolNames = ['harvard', 'MIT', 'stanford', 'UC_berkeley', 'UC_LA', 'SANJOSEstate'];
-    for (var i = 0; i < schoolNames.length; i++) {
-        $.ajax({
-            async: false,
-            type: 'GET',
-            // url: "http://localhost:3000/universityInfo?schoolName=" + schoolNames[i],
-            url: origin + "/universityInfo?schoolName=" + schoolNames[i],
-            success: function (data, status) {
-                if (status != 'success') {
-                    console.log("get university data failed :" + status);
-                } else {
-                    console.log("get university data :" + status);
-                    doc[i] = {
-                        name: data.name,
-                        sat_verbal: parseInt(data.sat_verbal),
-                        sat_math: parseInt(data.sat_math),
-                    };
-                }
-            }
-        });
-    }
-    var input = [['University', 'SAT Math', {role: 'style'}, 'SAT Verbal', {role: 'style'}]];
-    for (var i = 0; i < doc.length; i++) {
-        input.push([doc[i].name, doc[i].sat_math, '#2B4520', doc[i].sat_verbal, '#88B972']);
-    }
-    google.charts.load('current', {'packages': ['bar']});
+
+    google.charts.load('current', {'packages': ['line']});
     google.charts.setOnLoadCallback(function () {
-        var data = google.visualization.arrayToDataTable(input);
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'date');
+        data.addColumn('number', 'portfolio value');
+
+        var history = document.getElementById('portfolio history 1').innerText
+        start = 0
+        history_array = []
+        for (i = 0; i < history.length; i++) {
+            if (history.charAt(i) === ",") {
+                history_array.push(history.substring(start + 1, i))
+                start = i + 1
+            }
+        }
+        history_array.push(history.substring(start + 1, history.length - 1))
+
+        var today = new Date();
+        var date1 = (today.getMonth() + 1) + '-' + (today.getDate() - 4);
+        var date2 = (today.getMonth() + 1) + '-' + (today.getDate() - 3);
+        var date3 = (today.getMonth() + 1) + '-' + (today.getDate() - 2);
+        var date4 = (today.getMonth() + 1) + '-' + (today.getDate() - 1);
+        var date5 = (today.getMonth() + 1) + '-' + today.getDate();
+
+        data.addRow([date1, parseFloat(history_array[0])]);
+        data.addRow([date2, parseFloat(history_array[1])]);
+        data.addRow([date3, parseFloat(history_array[2])]);
+        data.addRow([date4, parseFloat(history_array[3])]);
+        data.addRow([date5, parseFloat(history_array[4])]);
+
         var options = {
-            title: 'University SAT scores',
-            orientation: 'horizontal',
+            title: 'A Weekly Trend of the Overall Portfolio Value',
+            hAxis: {
+                gridlines: {
+                    count: 3
+                },
+            },
             vAxis: {
                 viewWindow: {
-                    max: 800,
-                    min: 0,
-                },
-                gridlines: {
-                    count: 4
-                },
+                    min:4000,
+                    // max:8000,
+                }
             },
-            colors: ['#2B4520', '#88B972'],
+            colors: ['#2B4520','#88B972'],
             backgroundColor: {
                 fill: '#EEEEEE',
                 fillOpacity: 0.7
@@ -381,83 +393,7 @@ function drawChart4() {
             height: 300,
             width: 500,
         };
-        var chart = new google.visualization.BarChart(document.getElementById('chart4'));
+        var chart = new google.visualization.LineChart(document.getElementById('chart4'));
         chart.draw(data, options);
     });
-}
-
-function drawChart5() {
-    if (!document.getElementById('chart5')) {
-        return;
-    }
-    var origin = window.location.origin;
-    var doc = [];
-    var total = 0;
-    $.ajax({
-        async: false,
-        type: 'GET',
-        // url: "http://localhost:3000/allUniversityInfo",
-        url: origin + "/allUniversityInfo",
-        success: function (data, status) {
-            if (status != 'success') {
-                console.log("get university data failed :" + status);
-            } else {
-                console.log("get university data :" + status);
-                for (var i = 0; i < data.length; i++) {
-                    if (!doc[data[i].state]) {
-                        doc[data[i].state] = 1;
-                    } else {
-                        doc[data[i].state] = doc[data[i].state] + 1;
-                    }
-                    total++;
-                }
-            }
-        }
-    });
-    var input = [['State', 'University Number']];
-    for (var key in doc) {
-        input.push([key, doc[key]]);
-    }
-    google.charts.load('current', {'packages': ['geochart']});
-    google.charts.setOnLoadCallback(function () {
-        var data = google.visualization.arrayToDataTable(input);
-        var options = {
-            region: 'US',
-            displayMode: 'regions',
-            resolution: 'provinces',
-            height: 300,
-            width: 500,
-            backgroundColor: {
-                fill: '#EEEEEE',
-                fillOpacity: 0.7
-            },
-        };
-        var chart = new google.visualization.GeoChart(document.getElementById('chart5'));
-        chart.draw(data, options);
-    });
-}
-
-function drawChart6() {
-    if (!document.getElementById('chart6')) {
-        return;
-    }
-    var origin = window.location.origin;
-    var total = 0;
-    $.ajax({
-        async: false,
-        type: 'GET',
-        // url: "http://localhost:3000/allUniversityInfo",
-        url: origin + "/allUniversityInfo",
-        success: function (data, status) {
-            if (status != 'success') {
-                console.log("get university data failed :" + status);
-            } else {
-                console.log("get university data :" + status);
-                for (var i = 0; i < data.length; i++) {
-                    total++;
-                }
-            }
-        }
-    });
-    $('#chart6').html('<br><br><br><br><br><br><div id="chart6Title">Total Universities</div>' + '<br>' + '<div id="chart6Content">' + total + '</div>');
 }

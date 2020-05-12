@@ -9,6 +9,8 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif&display=swap">
         <script type="text/javascript" src="static/js/jquery.js"></script>
         <script type="text/javascript" src="static/js/jquery-ui.js"></script>
+        <!--        Using offline version of Google Chart API is not legit. It offends google's TOS. -->
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
         <script type="text/javascript" src="static/js/onload.js"></script>
     </head>
     <body>
@@ -29,10 +31,37 @@
 
         <!-- content division -->
         <div id="contentDiv">
-            <p>result charts...</p>
-            <p>{{ dollar_amount }}</p>
-            <p>{{ investment_strategy_1 }}</p>
-            <p>{{ investment_strategy_2 }}</p>
+            <table class="dashboardPage">
+                <tr>
+                    <td>
+                        <div id="chart1"></div>
+                    </td>
+                    <td>
+                        <div id="chart2"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div id="chart3"></div>
+                    </td>
+                    <td>
+                        <div id="chart4"></div>
+                    </td>
+                </tr>
+            </table>
+            <ul hidden>
+            {% for para in results %}
+            {% with name=forloop.counter %}
+            {% if para %}
+            {% for k, v in para.items %}
+                <li id="{{ k }} {{ name }}">{{ v }}</li>
+            {% endfor %}
+                <br>
+            {% endif %}
+            {% endwith %}
+            {% endfor %}
+            </ul>
+
         </div>
 
     </body>
