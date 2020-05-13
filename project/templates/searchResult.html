@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>dashboard</title>
+        <title>search result</title>
         <link rel="stylesheet" href="static/css/style.css"/>
         <link rel="stylesheet" href="static/css/jquery-ui.css"/>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&display=swap">
@@ -25,14 +25,29 @@
         <div id="navigatorDiv">
             <ul>
                 <li><a href="/">Home</a></li>
-                <li><a href="/dashboard" style="background-color:#3f6469">DashBoard</a></li>
+                <li><a href="/search" style="background-color:#3f6469">Search</a></li>
             </ul>
         </div>
 
         <!-- content division -->
-        <div id="contentDiv">
-            <p>dashboard charts...</p>
+        <div id="contentDiv" >
+            <table>
+                <tr>
+                    <td>
+                        <div id="result_chart1"></div>
+                    </td>
+                    <td>
+                        <div id="result_chart2"></div>
+                    </td>
+                </tr>
+            </table>
         </div>
+
+        <ul hidden>
+        {% for k, v in results.items %}
+            <li id="{{ k }}">{{ v }}</li>
+        {% endfor %}
+        </ul>
 
     </body>
 </html>

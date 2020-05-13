@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>result</title>
+        <title>dashboard</title>
         <link rel="stylesheet" href="static/css/style.css"/>
         <link rel="stylesheet" href="static/css/jquery-ui.css"/>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&display=swap">
@@ -24,45 +24,20 @@
         <!-- navigator division -->
         <div id="navigatorDiv">
             <ul>
-                <li><a href="/" style="background-color:#3f6469">Home</a></li>
-                <li><a href="/search">Search</a></li>
+                <li><a href="/">Home</a></li>
+                <li><a href="/search" style="background-color:#3f6469">Search</a></li>
             </ul>
         </div>
 
         <!-- content division -->
         <div id="contentDiv">
-            <table class="dashboardPage">
-                <tr>
-                    <td>
-                        <div id="chart1"></div>
-                    </td>
-                    <td>
-                        <div id="chart2"></div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div id="chart3"></div>
-                    </td>
-                    <td>
-                        <div id="chart4"></div>
-                    </td>
-                </tr>
-            </table>
-            <ul hidden>
-            {% for para in results %}
-            {% with name=forloop.counter %}
-            {% if para %}
-            {% for k, v in para.items %}
-                <li id="{{ k }} {{ name }}">{{ v }}</li>
-            {% endfor %}
-                <br>
-            {% endif %}
-            {% endwith %}
-            {% endfor %}
-            </ul>
-
+            <form action="/result" method="post">
+                {% csrf_token %}
+                <span class = "ui-icon ui-icon-star"></span>
+                <label for="stock_label">Please Enter a Stock Symbol:</label><br>
+                <input type="text" id="stock_label" name="stock_label" required><br><br>
+                <input type="submit" value="Submit"><br>
+            </form>
         </div>
-
     </body>
 </html>

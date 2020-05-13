@@ -48,6 +48,8 @@ function initAll() {
     drawChart2();
     drawChart3();
     drawChart4();
+    drawResultChart1();
+    drawResultChart2();
 }
 
 // function dropDownMenu() {
@@ -402,7 +404,7 @@ function drawChart3() {
         }
     }
 
-    google.charts.load('current', {packages: ['corechart', 'bar']});
+    google.charts.load('current', {'packages':['corechart']});
     google.charts.setOnLoadCallback(function () {
         var data = google.visualization.arrayToDataTable(input);
         var options = {
@@ -445,7 +447,7 @@ function drawChart4() {
         return;
     }
 
-    google.charts.load('current', {'packages': ['line']});
+    google.charts.load('current', {'packages':['corechart']});
     google.charts.setOnLoadCallback(function () {
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'date');
@@ -516,6 +518,98 @@ function drawChart4() {
             legend: {position: 'none'}
         };
         var chart = new google.visualization.LineChart(document.getElementById('chart4'));
+        chart.draw(data, options);
+    });
+}
+
+function drawResultChart1() {
+    if (!document.getElementById('result_chart1')) {
+        return;
+    }
+
+    google.charts.load('current', {'packages': ['table']});
+    google.charts.setOnLoadCallback(function () {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Attribute');
+        data.addColumn('string', 'Value');
+
+        data.addRow(['stock label', document.getElementById('stock_label').innerText]);
+        data.addRow(['company full name', document.getElementById('company_name').innerText]);
+        data.addRow(['time', document.getElementById('time').innerText]);
+        data.addRow(['stock current price ($)', document.getElementById('stock_price').innerText]);
+        data.addRow(['value changes ($)', document.getElementById('value_changes').innerText]);
+        data.addRow(['percentage changes', document.getElementById('percentage_changes').innerText]);
+
+        var options = {
+            height: 300,
+            width: 500,
+            showRowNumber: true
+        };
+
+        var table = new google.visualization.Table(document.getElementById('result_chart1'));
+        table.draw(data, options);
+    });
+}
+
+function drawResultChart2() {
+    if (!document.getElementById('result_chart2')) {
+        return;
+    }
+    google.charts.load('current', {'packages':['corechart']});
+    google.charts.setOnLoadCallback(function () {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'date');
+        data.addColumn('number', 'stock price');
+
+        var history = document.getElementById('history').innerText
+        start = 0
+        history_array = []
+        for (i = 0; i < history.length; i++) {
+            if (history.charAt(i) === ",") {
+                history_array.push(parseFloat(history.substring(start + 1, i)))
+                start = i + 1
+            }
+        }
+        history_array.push(parseFloat(history.substring(start + 1, history.length - 1)))
+
+        var today = new Date();
+        var date1 = (today.getMonth() + 1) + '-' + (today.getDate() - 4);
+        var date2 = (today.getMonth() + 1) + '-' + (today.getDate() - 3);
+        var date3 = (today.getMonth() + 1) + '-' + (today.getDate() - 2);
+        var date4 = (today.getMonth() + 1) + '-' + (today.getDate() - 1);
+        var date5 = (today.getMonth() + 1) + '-' + today.getDate();
+
+        data.addRow([date1, history_array[0]]);
+        data.addRow([date2, history_array[1]]);
+        data.addRow([date3, history_array[2]]);
+        data.addRow([date4, history_array[3]]);
+        data.addRow([date5, history_array[4]]);
+
+        var options = {
+            title: 'Weekly Trend of the Stock Value',
+            hAxis: {
+                title: 'Date',
+                gridlines: {
+                    count: 3
+                },
+            },
+            vAxis: {
+                title: 'Stock Value ($)',
+                viewWindow: {
+                    // min:4000,
+                    // max:8000,
+                }
+            },
+            colors: ['#2B4520','#88B972'],
+            backgroundColor: {
+                fill: '#EEEEEE',
+                fillOpacity: 0.7
+            },
+            height: 300,
+            width: 500,
+            legend: {position: 'none'}
+        };
+        var chart = new google.visualization.LineChart(document.getElementById('result_chart2'));
         chart.draw(data, options);
     });
 }

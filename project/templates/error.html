@@ -3,10 +3,38 @@
     <head>
         <meta charset="UTF-8">
         <title>error</title>
+        <link rel="stylesheet" href="static/css/style.css"/>
+        <link rel="stylesheet" href="static/css/jquery-ui.css"/>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&display=swap">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif&display=swap">
+        <script type="text/javascript" src="static/js/jquery.js"></script>
+        <script type="text/javascript" src="static/js/jquery-ui.js"></script>
+        <!--        Using offline version of Google Chart API is not legit. It offends google's TOS. -->
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script type="text/javascript" src="static/js/onload.js"></script>
     </head>
     <body>
-        <p>Something is wrong!</p><br>
-        <p>Error Message: {{ error_message }}</p><br>
-        <button onclick="history.back()">Back</button><br>
+    <!-- title division -->
+        <div id="titleDiv">
+            <h1>
+                Stock Portfolio Suggestion Engine
+            </h1>
+        </div>
+
+        <!-- navigator division -->
+        <div id="navigatorDiv">
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/search">Search</a></li>
+            </ul>
+        </div>
+
+        <!-- content division -->
+        <div id="contentDiv">
+            <p>Something is wrong!</p><br>
+            <p>Error Message: {{ error_message }}</p><br>
+            <button onclick="history.back()">Back</button><br>
+        </div>
+
     </body>
 </html>
