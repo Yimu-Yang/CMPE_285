@@ -171,14 +171,35 @@ function drawChart1() {
         data.addRow(['investing strategy', document.getElementById('strategy 1').innerText]);
         data.addRow(['invested amount ($)', document.getElementById('investment amount 1').innerText]);
         data.addRow(['invested stocks', document.getElementById('invested stocks 1').innerText]);
-        data.addRow(['money split ($)', document.getElementById('money distribution 1').innerText]);
         data.addRow(['current stock prices ($)', document.getElementById('current stock share prices 1').innerText]);
+        data.addRow(['money split ($)', document.getElementById('money distribution 1').innerText]);
         data.addRow(['number of shares bought', document.getElementById('number of shares 1').innerText]);
-        data.addRow(['current overall portfolio value ($)', document.getElementById('portfolio value 1').innerText]);
+        data.addRow(['strategy overall portfolio value ($)', document.getElementById('portfolio value 1').innerText]);
+
+        if (document.getElementById('strategy 2')) {
+            data.addRow(['', '']);
+            data.addRow(['investing strategy', document.getElementById('strategy 2').innerText]);
+            data.addRow(['invested amount ($)', document.getElementById('investment amount 2').innerText]);
+            data.addRow(['invested stocks', document.getElementById('invested stocks 2').innerText]);
+            data.addRow(['current stock prices ($)', document.getElementById('current stock share prices 2').innerText]);
+            data.addRow(['money split ($)', document.getElementById('money distribution 2').innerText]);
+            data.addRow(['number of shares bought', document.getElementById('number of shares 2').innerText]);
+            data.addRow(['strategy overall portfolio value ($)', document.getElementById('portfolio value 2').innerText]);
+        }
+
+        if (document.getElementById('strategy 2')) {
+            data.addRow(['', '']);
+            var overall = (parseFloat(document.getElementById('portfolio value 1').innerText)
+                + parseFloat(document.getElementById('portfolio value 2').innerText)).toFixed(2);
+            data.addRow(['current overall portfolio value ($)', overall.toString()]);
+        } else {
+            data.addRow(['', '']);
+            data.addRow(['current overall portfolio value ($)', document.getElementById('portfolio value 1').innerText]);
+        }
 
         var options = {
-            height: '100%',
-            width: '100%',
+            height: 300,
+            width: 500,
             showRowNumber: true
         };
         var table = new google.visualization.Table(document.getElementById('chart1'));
@@ -210,6 +231,26 @@ function drawChart2() {
         }
     }
 
+    if (document.getElementById('stock label 2')) {
+        stocks = document.getElementById('stock label 2').innerText
+        start = 0
+        end = 0
+        flag = true
+        for (i = 0; i < stocks.length; i++) {
+            if (stocks.charAt(i) === "'" && flag === true) {
+                start = i
+                flag = false
+                continue
+            }
+            if (stocks.charAt(i) === "'" && flag === false) {
+                end = i
+                flag = true
+                stock_array.push(stocks.substring(start + 1, end))
+                continue
+            }
+        }
+    }
+
     var amounts = document.getElementById('current stock share prices 1').innerText
     start = 0
     amount_array = []
@@ -220,6 +261,18 @@ function drawChart2() {
         }
     }
     amount_array.push(amounts.substring(start + 1, amounts.length - 1))
+
+    if (document.getElementById('current stock share prices 2')) {
+        amounts = document.getElementById('current stock share prices 2').innerText
+        start = 0
+        for (i = 0; i < amounts.length; i++) {
+            if (amounts.charAt(i) === ",") {
+                amount_array.push(amounts.substring(start + 1, i))
+                start = i + 1
+            }
+        }
+        amount_array.push(amounts.substring(start + 1, amounts.length - 1))
+    }
 
     var money_distribution = document.getElementById('money distribution 1').innerText
     start = 0
@@ -232,7 +285,19 @@ function drawChart2() {
     }
     money_distribution_array.push(money_distribution.substring(start + 1, money_distribution.length - 1))
 
-    var input = [['stock', 'current market price', 'invested money']];
+    if (document.getElementById('money distribution 2')) {
+        money_distribution = document.getElementById('money distribution 2').innerText
+        start = 0
+        for (i = 0; i < money_distribution.length; i++) {
+            if (money_distribution.charAt(i) === ",") {
+                money_distribution_array.push(money_distribution.substring(start + 1, i))
+                start = i + 1
+            }
+        }
+        money_distribution_array.push(money_distribution.substring(start + 1, money_distribution.length - 1))
+    }
+
+    var input = [['Stock Label', 'current price', 'money split']];
     for (var i = 0; i < stock_array.length; i++) {
         input.push([stock_array[i], parseFloat(amount_array[i]), parseFloat(money_distribution_array[i])])
     }
@@ -242,10 +307,13 @@ function drawChart2() {
         var data = google.visualization.arrayToDataTable(input);
         var options = {
             chart: {
-                title: 'Stock\'s current market price vs. invested money ($)',
+                title: 'Stock\'s current market price vs. money split ($)',
             },
             bars: 'vertical',
-            vAxis: {format: 'decimal'},
+            vAxis: {
+                format: 'decimal',
+                title: '($)'
+            },
             height: 300,
             width: 500,
             colors: ['#88B972', '#2B4520'],
@@ -282,6 +350,25 @@ function drawChart3() {
             continue
         }
     }
+    if (document.getElementById('stock label 2')) {
+        stocks = document.getElementById('stock label 2').innerText
+        start = 0
+        end = 0
+        flag = true
+        for (i = 0; i < stocks.length; i++) {
+            if (stocks.charAt(i) === "'" && flag === true) {
+                start = i
+                flag = false
+                continue
+            }
+            if (stocks.charAt(i) === "'" && flag === false) {
+                end = i
+                flag = true
+                stock_array.push(stocks.substring(start + 1, end))
+                continue
+            }
+        }
+    }
 
     var share = document.getElementById('number of shares 1').innerText
     start = 0
@@ -294,9 +381,25 @@ function drawChart3() {
     }
     share_array.push(share.substring(start + 1, share.length - 1))
 
+    if (document.getElementById('number of shares 2')) {
+        share = document.getElementById('number of shares 2').innerText
+        start = 0
+        for (i = 0; i < share.length; i++) {
+            if (share.charAt(i) === ",") {
+                share_array.push(share.substring(start + 1, i))
+                start = i + 1
+            }
+        }
+        share_array.push(share.substring(start + 1, share.length - 1))
+    }
+
     var input = [['Stock', 'Shares Bought', {role: 'style'}, {role: 'annotation'}]];
     for (var i = 0; i < stock_array.length; i++) {
-        input.push([stock_array[i], parseInt(share_array[i]), '#88B972', parseInt(share_array[i])])
+        if (i < 3) {
+            input.push([stock_array[i], parseInt(share_array[i]), '#2B4520', parseInt(share_array[i])])
+        } else {
+            input.push([stock_array[i], parseInt(share_array[i]), '#88B972', parseInt(share_array[i])])
+        }
     }
 
     google.charts.load('current', {packages: ['corechart', 'bar']});
@@ -309,6 +412,7 @@ function drawChart3() {
                 textStyle: {fontSize: 11},
             },
             hAxis: {
+                title: 'Shares Bought',
                 minValue: 0,
                 gridlines: {
                     count: 0
@@ -316,19 +420,18 @@ function drawChart3() {
                 textPosition: 'none'
             },
             vAxis: {
-                title: 'Stock',
+                title: 'Stock Label',
                 textStyle: {
                     fontSize: 12
                 }
             },
             height: 300,
-            width: 400,
+            width: 500,
             backgroundColor: {
                 fill: '#EEEEEE',
                 fillOpacity: 0.7
             },
             bar: {groupWidth: "65%"},
-            legend: {position: 'none'},
             seriesType: 'bars',
             series: {1: {type: 'scatter'}},
         };
@@ -353,11 +456,27 @@ function drawChart4() {
         history_array = []
         for (i = 0; i < history.length; i++) {
             if (history.charAt(i) === ",") {
-                history_array.push(history.substring(start + 1, i))
+                history_array.push(parseFloat(history.substring(start + 1, i)))
                 start = i + 1
             }
         }
-        history_array.push(history.substring(start + 1, history.length - 1))
+        history_array.push(parseFloat(history.substring(start + 1, history.length - 1)))
+
+        if (document.getElementById('portfolio history 2')) {
+            history = document.getElementById('portfolio history 2').innerText
+            history_array2 = []
+            start = 0
+            for (i = 0; i < history.length; i++) {
+                if (history.charAt(i) === ",") {
+                    history_array2.push(parseFloat(history.substring(start + 1, i)))
+                    start = i + 1
+                }
+            }
+            history_array2.push(parseFloat(history.substring(start + 1, history.length - 1)))
+            for (i = 0; i < history_array.length; i++) {
+                history_array[i] = history_array[i] + history_array2[i]
+            }
+        }
 
         var today = new Date();
         var date1 = (today.getMonth() + 1) + '-' + (today.getDate() - 4);
@@ -366,22 +485,24 @@ function drawChart4() {
         var date4 = (today.getMonth() + 1) + '-' + (today.getDate() - 1);
         var date5 = (today.getMonth() + 1) + '-' + today.getDate();
 
-        data.addRow([date1, parseFloat(history_array[0])]);
-        data.addRow([date2, parseFloat(history_array[1])]);
-        data.addRow([date3, parseFloat(history_array[2])]);
-        data.addRow([date4, parseFloat(history_array[3])]);
-        data.addRow([date5, parseFloat(history_array[4])]);
+        data.addRow([date1, history_array[0]]);
+        data.addRow([date2, history_array[1]]);
+        data.addRow([date3, history_array[2]]);
+        data.addRow([date4, history_array[3]]);
+        data.addRow([date5, history_array[4]]);
 
         var options = {
-            title: 'A Weekly Trend of the Overall Portfolio Value',
+            title: 'Weekly Trend of the Overall Portfolio Value',
             hAxis: {
+                title: 'Date',
                 gridlines: {
                     count: 3
                 },
             },
             vAxis: {
+                title: 'Portfolio Value ($)',
                 viewWindow: {
-                    min:4000,
+                    // min:4000,
                     // max:8000,
                 }
             },
@@ -392,6 +513,7 @@ function drawChart4() {
             },
             height: 300,
             width: 500,
+            legend: {position: 'none'}
         };
         var chart = new google.visualization.LineChart(document.getElementById('chart4'));
         chart.draw(data, options);

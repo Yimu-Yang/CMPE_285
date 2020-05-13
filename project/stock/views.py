@@ -12,14 +12,21 @@ def index(request):
 
 def suggest(request):
     if request.method == 'POST':
-        result1 = strategy(request, request.POST['investment_strategy_1'])
-        result2 = strategy(request, request.POST['investment_strategy_2'])
+        if request.POST['investment_strategy_2'] != '':
+            invested_amount1 = float(request.POST['dollar_amount']) / 2
+            invested_amount2 = float(request.POST['dollar_amount']) / 2
+        else:
+            invested_amount1 = float(request.POST['dollar_amount'])
+            invested_amount2 = 0
+
+        result1 = strategy(request, request.POST['investment_strategy_1'], invested_amount1)
+        result2 = strategy(request, request.POST['investment_strategy_2'], invested_amount2)
         parameters = {'results': [result1, result2]}
         return render(request, 'result.html', parameters)
 
 
-def strategy(request, strategy_name):
-    dollar_amount = request.POST['dollar_amount']
+def strategy(request, strategy_name, invested_amount):
+    dollar_amount = invested_amount
     stocks = []
     money = []
     current_value = []
