@@ -84,6 +84,14 @@ def strategy(request, strategy_name, invested_amount):
         for x in range(5):
             portfolio_history.append(history_value1[x] * current_share[0] + history_value2[x] * current_share[1] + history_value3[x] * current_share[2])
 
+    # elif strategy_name.lower() == 'index investing':
+    #
+    #
+    # elif strategy_name.lower() == 'quality investing':
+    #
+    #
+    # elif strategy_name.lower() == 'value investing':
+
     result = {'strategy': strategy_name, 'investment amount': dollar_amount, 'invested stocks': stock_name,
               'stock label': stocks, 'money distribution': money, 'current stock share prices': current_value,
               'number of shares': current_share, 'portfolio value': portfolio_value, 'portfolio history': portfolio_history}
