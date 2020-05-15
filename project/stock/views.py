@@ -87,16 +87,52 @@ def strategy(request, strategy_name, invested_amount):
     # elif strategy_name.lower() == 'index investing':
     #
     #
-    # elif strategy_name.lower() == 'quality investing':
-    #
-    #
+    elif strategy_name.lower() == 'quality investing':
+        # assigned stocks
+        stocks = ['AAPL', 'FTNT', 'MSFT']
+        stock_name = []
+        for stock in stocks:
+            stock_name.append(get_stock_name(stock) + '(' + stock + ')')
+
+        
+        # how money is split
+        # current_percentage_changes = [get_percentage_changes(stocks[0]), get_percentage_changes(stocks[1]), get_percentage_changes(stocks[2])]
+        stock_0_quality = get_percentage_changes(stocks[0])
+        stock_1_quality = get_percentage_changes(stocks[1])
+        stock_2_quality = get_percentage_changes(stocks[2])
+        if (stock_0_quality > stock_1_quality) and (stock_0_quality > stock_2_quality):
+            money = [round(float(dollar_amount) * 1 / 2, 2),
+                    round(float(dollar_amount) * 1 / 4, 2),
+                    round(float(dollar_amount) * 3 / 4, 2)]
+        elif (stock_1_quality > stock_2_quality) and (stock_1_quality > stock_0_quality):
+            money = [round(float(dollar_amount) * 1 / 2, 2),
+                    round(float(dollar_amount) * 1 / 4, 2),
+                    round(float(dollar_amount) * 3 / 4, 2)]
+        else:
+            money = [round(float(dollar_amount) * 1 / 2, 2),
+                    round(float(dollar_amount) * 1 / 4, 2),
+                    round(float(dollar_amount) * 3 / 4, 2)]
+    
+        # get current values of the stocks
+        current_value = [get_current_value(stocks[0]), get_current_value(stocks[1]), get_current_value(stocks[2])]
+        current_share = [int(money[0] / current_value[0]),
+                         int(money[1] / current_value[1]),
+                         int(money[2] / current_value[2])]
+        portfolio_value = round(current_value[0] * current_share[0] + current_value[1] * current_share[1] + current_value[2] * current_share[2], 2)
+
+        history_value1 = get_fiveday_history(stocks[0])
+        history_value2 = get_fiveday_history(stocks[1])
+        history_value3 = get_fiveday_history(stocks[2])
+        portfolio_history = []
+        for x in range(5):
+            portfolio_history.append(history_value1[x] * current_share[0] + history_value2[x] * current_share[1] + history_value3[x] * current_share[2])
+
     # elif strategy_name.lower() == 'value investing':
 
     result = {'strategy': strategy_name, 'investment amount': dollar_amount, 'invested stocks': stock_name,
               'stock label': stocks, 'money distribution': money, 'current stock share prices': current_value,
               'number of shares': current_share, 'portfolio value': portfolio_value, 'portfolio history': portfolio_history}
     return result
-
 
 def get_stock_name(label):
     try:
@@ -125,6 +161,21 @@ def get_current_value(label):
         else:
             return 'invalid stock symbol!'
 
+def get_percentage_changes(label):
+    try: 
+        stock_label = label
+        ticker_data = yf.Ticker(stock_label)
+        ticker_df = ticker_data.history()
+        latest_price = ticker_df['Close'].iloc[-1]
+        yesterday_close = ticker_df['Close'].iloc[-2]
+        value_changes = round(float(latest_price) - float(yesterday_close), 2)
+        percentage_changes = round(value_changes / float(yesterday_close) * 100, 2)
+        return round(float(percentage_changes), 2)
+    except Exception as e:
+        if isinstance(e, ConnectionError):
+            return 'no network!'
+        else:
+            return 'invalid stock symbol!'
 
 def get_fiveday_history(label):
     try:
