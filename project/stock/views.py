@@ -84,30 +84,9 @@ def strategy(request, strategy_name, invested_amount):
         for x in range(5):
             portfolio_history.append(history_value1[x] * current_share[0] + history_value2[x] * current_share[1] + history_value3[x] * current_share[2])
 
-    elif strategy_name.lower() == 'index investing':
-        stocks = ['VTI', 'IXUS', 'ILTB']
-        stock_name = []
-        for stock in stocks:
-            stock_name.append(get_stock_name(stock) + '(' + stock + ')')
-        current_value = [get_current_value(stocks[0]), get_current_value(stocks[1]), get_current_value(stocks[2])]
-        money = [round(float(dollar_amount) * 1 / 3, 2),
-                 round(float(dollar_amount) * 0.8 / 3, 2),
-                 round(float(dollar_amount) * 1.2 / 3, 2)]
-        current_share = [int(money[0] / current_value[0]),
-                         int(money[1] / current_value[1]),
-                         int(money[2] / current_value[2])]
-        portfolio_value = round(
-            current_value[0] * current_share[0] + current_value[1] * current_share[1] + current_value[2] *
-            current_share[2], 2)
-        history_value1 = get_fiveday_history(stocks[0])
-        history_value2 = get_fiveday_history(stocks[1])
-        history_value3 = get_fiveday_history(stocks[2])
-        portfolio_history = []
-        for x in range(5):
-            portfolio_history.append(
-                history_value1[x] * current_share[0] + history_value2[x] * current_share[1] + history_value3[x] *
-                current_share[2])
-
+    # elif strategy_name.lower() == 'index investing':
+    #
+    #
     elif strategy_name.lower() == 'quality investing':
         # assigned stocks
         stocks = ['AAPL', 'FTNT', 'MSFT']
@@ -117,22 +96,21 @@ def strategy(request, strategy_name, invested_amount):
 
         
         # how money is split
-        # current_percentage_changes = [get_percentage_changes(stocks[0]), get_percentage_changes(stocks[1]), get_percentage_changes(stocks[2])]
         stock_0_quality = get_percentage_changes(stocks[0])
         stock_1_quality = get_percentage_changes(stocks[1])
         stock_2_quality = get_percentage_changes(stocks[2])
         if (stock_0_quality > stock_1_quality) and (stock_0_quality > stock_2_quality):
             money = [round(float(dollar_amount) * 1 / 2, 2),
                     round(float(dollar_amount) * 1 / 4, 2),
-                    round(float(dollar_amount) * 3 / 4, 2)]
+                    round(float(dollar_amount) * 1 / 4, 2)]
         elif (stock_1_quality > stock_2_quality) and (stock_1_quality > stock_0_quality):
             money = [round(float(dollar_amount) * 1 / 2, 2),
                     round(float(dollar_amount) * 1 / 4, 2),
-                    round(float(dollar_amount) * 3 / 4, 2)]
+                    round(float(dollar_amount) * 1 / 4, 2)]
         else:
             money = [round(float(dollar_amount) * 1 / 2, 2),
                     round(float(dollar_amount) * 1 / 4, 2),
-                    round(float(dollar_amount) * 3 / 4, 2)]
+                    round(float(dollar_amount) * 1 / 4, 2)]
     
         # get current values of the stocks
         current_value = [get_current_value(stocks[0]), get_current_value(stocks[1]), get_current_value(stocks[2])]
