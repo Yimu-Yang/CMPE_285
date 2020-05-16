@@ -91,8 +91,8 @@ def strategy(request, strategy_name, invested_amount):
             stock_name.append(get_stock_name(stock) + '(' + stock + ')')
         current_value = [get_current_value(stocks[0]), get_current_value(stocks[1]), get_current_value(stocks[2])]
         money = [round(float(dollar_amount) * 1 / 3, 2),
-                 round(float(dollar_amount) * 1 / 3, 2),
-                 round(float(dollar_amount) * 1 / 3, 2)]
+                 round(float(dollar_amount) * 0.8 / 3, 2),
+                 round(float(dollar_amount) * 1.2 / 3, 2)]
         current_share = [int(money[0] / current_value[0]),
                          int(money[1] / current_value[1]),
                          int(money[2] / current_value[2])]
