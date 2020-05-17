@@ -1,6 +1,6 @@
 # Getting Started
 
-### How to Run
+### How to run
 Required python3 and pip3 installed on your computer
 
 1. cd project root directory
