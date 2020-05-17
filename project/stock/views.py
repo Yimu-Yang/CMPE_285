@@ -146,18 +146,17 @@ def strategy(request, strategy_name, invested_amount):
         for x in range(5):
             portfolio_history.append(history_value1[x] * current_share[0] + history_value2[x] * current_share[1] + history_value3[x] * current_share[2])
 
-    # elif strategy_name.lower() == 'value investing':
     elif strategy_name.lower() == 'value investing':
         # assigned stocks
-        stocks = ['GOOGL', 'AMZN', 'NSRGY']
+        stocks = ['CSCO', 'LUV', 'TSLA']
         stock_name = []
         for stock in stocks:
             stock_name.append(get_stock_name(stock) + '(' + stock + ')')
 
         # how money is split
-        money = [round(float(dollar_amount) * 1 / 3, 2),
-                 round(float(dollar_amount) * 1 / 3, 2),
-                 round(float(dollar_amount) * 1 / 3, 2)]
+        money = [round(float(dollar_amount) * 1 / 2, 2),
+                 round(float(dollar_amount) * 3 / 8, 2),
+                 round(float(dollar_amount) * 1 / 8, 2)]
         # get current values of the stocks
         current_value = [get_current_value(stocks[0]), get_current_value(stocks[1]), get_current_value(stocks[2])]
         current_share = [int(money[0] / current_value[0]),
